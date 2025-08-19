@@ -14,15 +14,15 @@ class DataIngestionConfig:
     def __init__(self,training_pipeline_config:TrainingPieplineConfig):
         self.data_ingestion_dir:str=os.path.join(
             training_pipeline_config.artifact_dir,training_pipeline.DATA_INGESTION_DIR_NAME)
-        self.feature_store_file_path=os.join.path(
+        self.feature_store_file_path=os.path.join(
             self.data_ingestion_dir,training_pipeline.DATA_INGESTION_FEATURE_STORE_DIR,
             training_pipeline.FILENAME
         )
-        self.training_file_path=os.join.path(
+        self.training_file_path=os.path.join(
             self.data_ingestion_dir,training_pipeline.DATA_INGESTION_INGESTED_DIR,
             training_pipeline.TRAIN_FILE_NAME
         )
-        self.testing_file_path=os.join.path(
+        self.testing_file_path=os.path.join(
             self.data_ingestion_dir,training_pipeline.DATA_INGESTION_INGESTED_DIR,
             training_pipeline.TEST_FILE_NAME
         )
