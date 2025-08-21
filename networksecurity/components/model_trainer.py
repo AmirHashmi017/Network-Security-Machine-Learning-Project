@@ -17,6 +17,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier,GradientBoostingClassifier,AdaBoostClassifier
 from sklearn.metrics import r2_score
+import mlflow
 
 class ModelTrainer:
     def __init__(self,model_trainer_config:ModelTrainerConfig,data_transformation_artifact:DataTransformationArtifact):
@@ -26,6 +27,17 @@ class ModelTrainer:
         except Exception as e:
             raise NetworkSecuityException(e,sys)
     
+    def track_mlflow(self,best_model,classification_metric):
+        with mlflow.start_run():
+            f1_score=classification_metric.f1score
+            precision_score= classification_metric.precision_score
+            recall_score= classification_metric.recall_score
+
+            mlflow.log_metric("f1_score",f1_score)
+            mlflow.log_metric("precision_score",precision_score)
+            mlflow.log_metric("recall_score",recall_score)
+            mlflow.sklearn.log_model(best_model,"model")
+
 
     def train_model(self,X_train,Y_train,X_test,Y_test):
         try:
@@ -71,10 +83,14 @@ class ModelTrainer:
             ]
             best_model=models[best_model_name]
             Y_train_pred= best_model.predict(X_train)
-            classifiaction_train_metric=get_classification_score(y_true=Y_train,y_pred=Y_train_pred)
+            classification_train_metric=get_classification_score(y_true=Y_train,y_pred=Y_train_pred)
+            # Track the experiments with mlflow
+            self.track_mlflow(best_model,classification_train_metric)
             
             Y_test_pred= best_model.predict(X_test)
-            classifiaction_test_metric=get_classification_score(y_true=Y_test,y_pred=Y_test_pred)
+            classification_test_metric=get_classification_score(y_true=Y_test,y_pred=Y_test_pred)
+            # Track the experiments with mlflow
+            self.track_mlflow(best_model,classification_test_metric)
 
             preprocessor= load_object(filepath=self.data_transformation_artifact.transformed_object_file_path)
             model_dir_path= os.path.dirname(self.model_trainer_config.trained_model_file_path)
@@ -85,8 +101,8 @@ class ModelTrainer:
 
             # Model Trainer Artifact
             model_trainer_artifact=ModelTrainerArtifact(trained_model_file_path= self.model_trainer_config.trained_model_file_path,
-                                 train_metric_artifact=classifiaction_train_metric,
-                                 test_metric_artifact=classifiaction_test_metric)
+                                 train_metric_artifact=classification_train_metric,
+                                 test_metric_artifact=classification_test_metric)
             logging.info(f"Model Trainer Artifact: {model_trainer_artifact}")
             return model_trainer_artifact
 
