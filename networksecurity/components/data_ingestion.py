@@ -27,15 +27,16 @@ class DataIngestion:
         Function to read data from mongoDB
         '''
         try:
-            database_name=self.data_ingestion_config.database_name
-            collection_name= self.data_ingestion_config.collection_name
-            self.mongo_client= pymongo.MongoClient(MONGO_DB_URL)
-            collection=self.mongo_client[database_name][collection_name]
-            df=pd.DataFrame(list(collection.find()))
-            if "_id" in df.columns:
-                df= df.drop(columns=["_id"],axis=1)
-            df.replace({"na",np.nan},inplace=True)
-            return df
+            # database_name=self.data_ingestion_config.database_name
+            # collection_name= self.data_ingestion_config.collection_name
+            # self.mongo_client= pymongo.MongoClient(MONGO_DB_URL)
+            # collection=self.mongo_client[database_name][collection_name]
+            # df=pd.DataFrame(list(collection.find()))
+            # if "_id" in df.columns:
+            #     df= df.drop(columns=["_id"],axis=1)
+            # df.replace({"na",np.nan},inplace=True)
+            # return df
+            return pd.read_csv("Network_Data/phisingData.csv")
 
         except Exception as e:
             raise NetworkSecuityException(e,sys)
