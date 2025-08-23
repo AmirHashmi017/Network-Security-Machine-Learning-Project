@@ -64,15 +64,15 @@ class ModelTrainer:
                 "Gradient Boosting":{
                     # 'loss':['log_loss', 'exponential'],
                     'learning_rate':[.1,.01,.05,.001],
-                    'subsample':[0.6,0.7,0.75,0.85,0.9],
+                    # 'subsample':[0.6,0.7,0.75,0.85,0.9],
                     # 'criterion':['squared_error', 'friedman_mse'],
                     # 'max_features':['auto','sqrt','log2'],
-                    'n_estimators': [8,16,32,64,128,256]
+                    # 'n_estimators': [8,16,32,64,128,256]
                 },
                 "Logistic Regression":{},
                 "AdaBoost":{
                     'learning_rate':[.1,.01,.001],
-                    'n_estimators': [8,16,32,64,128,256]
+                    # 'n_estimators': [8,16,32,64,128,256]
                 }
             }
             model_report:dict=evaluate_models(X_train,Y_train,X_test,Y_test,models=models,
@@ -100,7 +100,7 @@ class ModelTrainer:
             network_model= NetworkModel(preprocessor=preprocessor,model=best_model)
             save_object(filepath=self.model_trainer_config.trained_model_file_path,obj=network_model)
             # Model Pusher
-            save_object("final_models/model.pkl",best_model)
+            save_object("final_model/model.pkl",best_model)
 
             # Model Trainer Artifact
             model_trainer_artifact=ModelTrainerArtifact(trained_model_file_path= self.model_trainer_config.trained_model_file_path,
