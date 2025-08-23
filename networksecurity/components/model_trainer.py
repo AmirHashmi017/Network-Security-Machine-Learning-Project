@@ -66,13 +66,13 @@ class ModelTrainer:
                     'learning_rate':[.1,.01,.05,.001],
                     # 'subsample':[0.6,0.7,0.75,0.85,0.9],
                     # 'criterion':['squared_error', 'friedman_mse'],
-                    # 'max_features':['auto','sqrt','log2'],
-                    # 'n_estimators': [8,16,32,64,128,256]
+                    'max_features':['auto','sqrt','log2'],
+                    'n_estimators': [8,16,32,64,128,256]
                 },
                 "Logistic Regression":{},
                 "AdaBoost":{
                     'learning_rate':[.1,.01,.001],
-                    # 'n_estimators': [8,16,32,64,128,256]
+                    'n_estimators': [8,16,32,64,128,256]
                 }
             }
             model_report:dict=evaluate_models(X_train,Y_train,X_test,Y_test,models=models,
